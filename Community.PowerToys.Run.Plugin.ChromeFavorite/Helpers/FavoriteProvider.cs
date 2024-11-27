@@ -11,7 +11,7 @@ namespace Community.PowerToys.Run.Plugin.ChromeFavorite.Helpers
 {
     public class FavoriteProvider : IFavoriteProvider
     {
-        private readonly string _path = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Bookmarks");
+        private readonly string _path = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\BraveSoftware\Brave-Software\User Data\Default\Bookmarks");
         private readonly FileSystemWatcher _watcher;
         private FavoriteItem _root;
 
