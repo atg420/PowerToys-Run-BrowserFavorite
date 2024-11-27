@@ -3,12 +3,12 @@
   "Disabled": false,
   "ActionKeyword": "@",
   "IsGlobal": false,
-  "Name": "Chrome Favorite",
+  "Name": "Brave Favorite",
   "Author": "davidegiacometti",
   "Version": "1.0.0",
   "Language": "csharp",
   "Website": "https://aka.ms/powertoys",
-  "ExecuteFileName": "Community.PowerToys.Run.Plugin.ChromeFavorite.dll",
-  "IcoPathDark": "Images\\ChromeFavorite.dark.png",
-  "IcoPathLight": "Images\\ChromeFavorite.light.png"
+  "ExecuteFileName": "Community.PowerToys.Run.Plugin.BraveFavorite.dll",
+  "IcoPathDark": "Images\\BraveFavorite.dark.png",
+  "IcoPathLight": "Images\\BraveFavorite.light.png"
 }

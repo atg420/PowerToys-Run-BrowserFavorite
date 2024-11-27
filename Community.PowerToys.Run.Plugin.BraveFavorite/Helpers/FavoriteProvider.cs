@@ -4,10 +4,10 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using Community.PowerToys.Run.Plugin.ChromeFavorite.Models;
+using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
 using Wox.Plugin.Logger;
 
-namespace Community.PowerToys.Run.Plugin.ChromeFavorite.Helpers
+namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
 {
     public class FavoriteProvider : IFavoriteProvider
     {

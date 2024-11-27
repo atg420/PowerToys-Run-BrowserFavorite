@@ -5,15 +5,15 @@ $version = $xml.Project.PropertyGroup.Version
 
 foreach ($platform in "ARM64", "x64")
 {
-    if (Test-Path -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.ChromeFavorite\bin")
+    if (Test-Path -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin")
     {
-        Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.ChromeFavorite\bin\*" -Recurse
+        Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\*" -Recurse
     }
 
-    dotnet build $PSScriptRoot\Community.PowerToys.Run.Plugin.ChromeFavorite.sln -c Release /p:Platform=$platform
+    dotnet build $PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite.sln -c Release /p:Platform=$platform
 
-    Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.ChromeFavorite\bin\*" -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
-    Rename-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.ChromeFavorite\bin\$platform\Release" -NewName "ChromeFavorite"
+    Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\*" -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
+    Rename-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\Release" -NewName "BraveFavorite"
 
-    Compress-Archive -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.ChromeFavorite\bin\$platform\ChromeFavorite" -DestinationPath "$PSScriptRoot\ChromeFavorite-$version-$platform.zip"
+    Compress-Archive -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\BraveFavorite" -DestinationPath "$PSScriptRoot\BraveFavorite-$version-$platform.zip"
 }

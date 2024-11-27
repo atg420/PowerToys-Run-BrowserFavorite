@@ -7,7 +7,7 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+"
 
 env:
-  PLUGIN_NAME: ChromeFavorite
+  PLUGIN_NAME: BraveFavorite
 
 jobs:
   build:
@@ -32,17 +32,17 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Build
-        run: dotnet build Community.PowerToys.Run.Plugin.ChromeFavorite.sln --configuration Release /p:Platform=${{matrix.platform}} /p:EnableWindowsTargeting=true
+        run: dotnet build Community.PowerToys.Run.Plugin.BraveFavorite.sln --configuration Release /p:Platform=${{matrix.platform}} /p:EnableWindowsTargeting=true
 
       - name: Test
         if: ${{matrix.platform == 'x64'}}
-        run: dotnet test Community.PowerToys.Run.Plugin.ChromeFavorite.sln --no-build --verbosity normal --configuration Release /p:Platform=${{matrix.platform}}
+        run: dotnet test Community.PowerToys.Run.Plugin.BraveFavorite.sln --no-build --verbosity normal --configuration Release /p:Platform=${{matrix.platform}}
 
       - name: Prepare artifact
         run: |
-          Remove-Item -Path Community.PowerToys.Run.Plugin.ChromeFavorite\bin\* -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
-          Rename-Item -Path Community.PowerToys.Run.Plugin.ChromeFavorite\bin\${{matrix.platform}}\Release -NewName $env:PLUGIN_NAME
-          Compress-Archive -Path Community.PowerToys.Run.Plugin.ChromeFavorite\bin\${{matrix.platform}}\$env:PLUGIN_NAME -DestinationPath "${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}.zip"
+          Remove-Item -Path Community.PowerToys.Run.Plugin.BraveFavorite\bin\* -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
+          Rename-Item -Path Community.PowerToys.Run.Plugin.BraveFavorite\bin\${{matrix.platform}}\Release -NewName $env:PLUGIN_NAME
+          Compress-Archive -Path Community.PowerToys.Run.Plugin.BraveFavorite\bin\${{matrix.platform}}\$env:PLUGIN_NAME -DestinationPath "${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3

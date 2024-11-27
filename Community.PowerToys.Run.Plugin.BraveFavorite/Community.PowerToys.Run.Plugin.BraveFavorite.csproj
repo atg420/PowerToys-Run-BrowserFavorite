@@ -32,10 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Images\ChromeFavorite.dark.png">
+    <None Update="Images\BraveFavorite.dark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Images\ChromeFavorite.light.png">
+    <None Update="Images\BraveFavorite.light.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Images\Url.dark.png">

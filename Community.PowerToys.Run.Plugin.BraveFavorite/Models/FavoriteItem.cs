@@ -11,7 +11,7 @@ using Wox.Infrastructure;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
 
-namespace Community.PowerToys.Run.Plugin.ChromeFavorite.Models
+namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
 {
     public class FavoriteItem
     {
@@ -115,7 +115,7 @@ namespace Community.PowerToys.Run.Plugin.ChromeFavorite.Models
                         AcceleratorModifiers = ModifierKeys.Control,
                         Action = _ =>
                         {
-                            Helper.OpenInShell(@"shell:AppsFolder\Chrome", $"-private {Url}");
+                            Helper.OpenInShell(@"shell:AppsFolder\Brave", $"-private {Url}");
                             return true;
                         },
                     },

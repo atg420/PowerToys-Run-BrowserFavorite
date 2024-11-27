@@ -1,6 +1,6 @@
-# PowerToys Run: Chrome Favorite plugin
+# PowerToys Run: Brave Favorite plugin
 
-This Repository is Forked from davidegiacometti/PowerToys-Run-EdgeFavorite for Chrome.
+This Repository is Forked from davidegiacometti/PowerToys-Run-EdgeFavorite for Brave.
 
 # Build
 

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Community.PowerToys.Run.Plugin.ChromeFavorite\Community.PowerToys.Run.Plugin.ChromeFavorite.csproj" />
+    <ProjectReference Include="..\Community.PowerToys.Run.Plugin.BraveFavorite\Community.PowerToys.Run.Plugin.BraveFavorite.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using Community.PowerToys.Run.Plugin.ChromeFavorite.Helpers;
-using Community.PowerToys.Run.Plugin.ChromeFavorite.Models;
+using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
 using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
 
-namespace Community.PowerToys.Run.Plugin.ChromeFavorite
+namespace Community.PowerToys.Run.Plugin.BraveFavorite
 {
     public class Main : IPlugin, ISettingProvider, IContextMenu
     {
@@ -25,9 +25,9 @@ namespace Community.PowerToys.Run.Plugin.ChromeFavorite
         private PluginInitContext? _context;
         private bool _searchTree;
 
-        public string Name => "Chrome Favorite";
+        public string Name => "Brave Favorite";
 
-        public string Description => "Open Chrome favorites.";
+        public string Description => "Open Brave favorites.";
 
         public IEnumerable<PluginAdditionalOption> AdditionalOptions => new List<PluginAdditionalOption>
         {
