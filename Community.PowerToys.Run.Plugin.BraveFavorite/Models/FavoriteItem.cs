@@ -115,7 +115,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                         AcceleratorModifiers = ModifierKeys.Control,
                         Action = _ =>
                         {
-                            Helper.OpenInShell(@"shell:AppsFolder\Brave", $"-private {Url}");
+                            Helper.OpenInShell(@"shell:AppsFolder\Brave", $"-icognito {Url}");
                             return true;
                         },
                     },
