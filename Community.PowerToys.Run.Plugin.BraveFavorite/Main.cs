@@ -72,7 +72,9 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
 
                 foreach (var favorite in _favoriteQuery.GetAll(_favoriteProvider.Root))
                 {
-                    var score = StringMatcher.FuzzySearch(query.Search, favorite.Name);
+                    var nameScore = StringMatcher.FuzzySearch(query.Search, favorite.Name);
+                    var urlScore = StringMatcher.FuzzySearch(query.Search, favorite.Url);
+                    var score = Math.Max(nameScore.Score, ulrScore.Score);
                     if (string.IsNullOrWhiteSpace(query.Search) || score.Score > 0)
                     {
                         var result = favorite.CreateResult();
