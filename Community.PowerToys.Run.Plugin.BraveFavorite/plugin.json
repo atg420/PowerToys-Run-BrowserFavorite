@@ -3,7 +3,7 @@
   "Disabled": false,
   "ActionKeyword": "@",
   "IsGlobal": false,
-  "Name": "Brave Favorite",
+  "Name": "BraveFavorite",
   "Author": "davidegiacometti",
   "Version": "1.0.0",
   "Language": "csharp",
