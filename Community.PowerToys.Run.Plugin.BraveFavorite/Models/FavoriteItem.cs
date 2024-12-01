@@ -21,7 +21,21 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
 
         public string Name { get; }
 
-        public string? Url { get; }
+        public Uri? Url { get; }
+
+        public string BaseUrl
+        {
+            get
+            {
+                if (Url is null)
+                {
+                    return string.Empty;
+                }
+
+                var splitHostName = Url.Host.Split('.');
+                return splitHostName[^2];
+            }
+        }
 
         public string Path { get; }
 
@@ -36,11 +50,11 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
             Type = FavoriteType.Folder;
         }
 
-        public FavoriteItem(string name, string? url, string path, FavoriteType type)
+        public FavoriteItem(string name, Uri? url, string path, FavoriteType type)
         {
             Name = name;
             Url = url;
-            Path = path;
+            Path = string.IsNullOrEmpty(path) ? $"/{(string.IsNullOrEmpty(name) ? BaseUrl : name)}" : path;
             Type = type;
         }
 
@@ -63,7 +77,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                 },
                 FavoriteType.Url => new Result
                 {
-                    Title = Name,
+                    Title = string.IsNullOrEmpty(Name) ? BaseUrl : Name,
                     SubTitle = $"Favorite: {Path}",
                     IcoPath = _urlIcoPath,
                     QueryTextDisplay = Path,
@@ -72,7 +86,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                         Helper.OpenInShell($"{Url}");
                         return true;
                     },
-                    ToolTipData = new ToolTipData(Name, Url),
+                    ToolTipData = new ToolTipData(string.IsNullOrEmpty(Name) ? BaseUrl : Name, Url?.ToString()),
                     ContextData = this,
                 },
                 _ => throw new ArgumentException(),
@@ -85,7 +99,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
             {
                 return new List<ContextMenuResult>
                 {
-                    new ContextMenuResult
+                    new()
                     {
                         Title = "Copy URL (Ctrl+C)",
                         Glyph = "\xE8C8",
@@ -96,7 +110,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                         {
                             try
                             {
-                                Clipboard.SetText(Url);
+                                Clipboard.SetText(Url?.ToString() ?? string.Empty);
                             }
                             catch (Exception ex)
                             {
@@ -106,7 +120,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                             return true;
                         },
                     },
-                    new ContextMenuResult
+                    new()
                     {
                         Title = "Open InPrivate (Ctrl+P)",
                         Glyph = "\xE727",
@@ -115,7 +129,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                         AcceleratorModifiers = ModifierKeys.Control,
                         Action = _ =>
                         {
-                            Helper.OpenInShell(@"shell:AppsFolder\Brave", $"-icognito {Url}");
+                            Helper.OpenInShell(@"shell:AppsFolder\Brave", $"-incognito  {Url}");
                             return true;
                         },
                     },

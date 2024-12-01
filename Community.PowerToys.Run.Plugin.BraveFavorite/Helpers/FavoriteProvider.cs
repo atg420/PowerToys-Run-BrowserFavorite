@@ -102,11 +102,15 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
             else if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("url", out var url))
             {
                 var name = element.GetProperty("name").GetString();
-                if (!string.IsNullOrWhiteSpace(name))
+                try
                 {
                     path += $"{(string.IsNullOrWhiteSpace(path) ? string.Empty : "/")}{name}";
-                    var favorite = new FavoriteItem(name, url.GetString(), path, FavoriteType.Url);
+                    var favorite = new FavoriteItem(name ?? string.Empty, new Uri(url.GetString()!), path, FavoriteType.Url);
                     parent.AddChildren(favorite);
+                }
+                catch (Exception ex)
+                {
+                    Log.Exception("Failed to create Favourite item", ex, typeof(FavoriteItem));
                 }
             }
         }

@@ -19,24 +19,34 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
         public static string PluginID => "D73A7EF0633F4C82A14454FFD848F447";
 
         private const string SearchTree = nameof(SearchTree);
+        private const string SearchBaseUrl = nameof(SearchBaseUrl);
         private const bool SearchTreeDefault = false;
+        private const bool SearchBaseUrlDefault = false;
         private readonly IFavoriteProvider _favoriteProvider;
         private readonly IFavoriteQuery _favoriteQuery;
         private PluginInitContext? _context;
         private bool _searchTree;
+        private bool _searchBaseUrl;
 
         public string Name => "Brave Favorite";
 
-        public string Description => "Open Brave favorites.";
+        public string Description => "Open Browser favorites.";
 
         public IEnumerable<PluginAdditionalOption> AdditionalOptions => new List<PluginAdditionalOption>
         {
-            new PluginAdditionalOption
+            new()
             {
                 Key = SearchTree,
                 Value = SearchTreeDefault,
                 DisplayLabel = "Search as tree",
                 DisplayDescription = "Navigate the original directory tree when searching.",
+            },
+            new()
+            {
+                Key = SearchBaseUrl,
+                Value = SearchBaseUrlDefault,
+                DisplayLabel = "Base URL Search",
+                DisplayDescription = "If enabled, bookmarks without titles can be found by searching their base URL. For example, 'https://www.google.com/' can be found by searching 'google'. If disabled, bookmarks without titles cannot be searched.",
             },
         };
 
@@ -72,9 +82,14 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
 
                 foreach (var favorite in _favoriteQuery.GetAll(_favoriteProvider.Root))
                 {
-                    var nameScore = StringMatcher.FuzzySearch(query.Search, favorite.Name);
-                    var urlScore = StringMatcher.FuzzySearch(query.Search, favorite.Url);
-                    var score = nameScore.Score >= urlScore.Score ? nameScore : urlScore;
+                    var name = favorite.Name;
+
+                    if (_searchBaseUrl && string.IsNullOrWhiteSpace(name))
+                    {
+                        name = favorite.BaseUrl;
+                    }
+
+                    var score = StringMatcher.FuzzySearch(query.Search, name);
                     if (string.IsNullOrWhiteSpace(query.Search) || score.Score > 0)
                     {
                         var result = favorite.CreateResult();
@@ -98,10 +113,12 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
             if (settings != null && settings.AdditionalOptions != null)
             {
                 _searchTree = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchTree)?.Value ?? SearchTreeDefault;
+                _searchBaseUrl = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchBaseUrl)?.Value ?? SearchBaseUrlDefault;
             }
             else
             {
                 _searchTree = SearchTreeDefault;
+                _searchBaseUrl = SearchBaseUrlDefault;
             }
         }
 
