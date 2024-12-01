@@ -15,5 +15,15 @@ foreach ($platform in "ARM64", "x64")
     Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\*" -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
     Rename-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\Release" -NewName "BraveFavorite"
 
-    Compress-Archive -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\BraveFavorite" -DestinationPath "$PSScriptRoot\BraveFavorite-$version-$platform.zip"
+    # Define the destination zip file path
+    $zipPath = "$PSScriptRoot\BraveFavorite-$version-$platform.zip"
+    
+    # Check if the zip file already exists, and remove it if it does
+    if (Test-Path -Path $zipPath)
+    {
+       Remove-Item -Path $zipPath -Force
+    }
+    
+    # Create the ZIP file
+    Compress-Archive -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\BraveFavorite" -DestinationPath $zipPath
 }

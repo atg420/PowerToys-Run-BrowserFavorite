@@ -1,10 +1,10 @@
 {
-  "ID": "D73A7EF0633F4C82A14454FFD848F447",
+  "ID": "D73A7EF0633F4C82A14454FFD848F444",
   "Disabled": false,
   "ActionKeyword": "@",
   "IsGlobal": false,
   "Name": "Brave Favorite",
-  "Author": "davidegiacometti",
+  "Author": "derPenz",
   "Version": "1.0.0",
   "Language": "csharp",
   "Website": "https://aka.ms/powertoys",

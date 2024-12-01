@@ -16,7 +16,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
 {
     public class Main : IPlugin, ISettingProvider, IContextMenu
     {
-        public static string PluginID => "D73A7EF0633F4C82A14454FFD848F447";
+        public static string PluginID => "D73A7EF0633F4C82A14454FFD848F444";
 
         private const string SearchTree = nameof(SearchTree);
         private const string SearchBaseUrl = nameof(SearchBaseUrl);
