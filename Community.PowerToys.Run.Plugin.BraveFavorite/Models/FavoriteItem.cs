@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using ManagedCommon;
@@ -18,6 +19,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
         private static string? _folderIcoPath;
         private static string? _urlIcoPath;
         private readonly List<FavoriteItem> _childrens = new();
+        private static readonly string[] ExludeSubDomains = { "www" };
 
         public string Name { get; }
 
@@ -33,6 +35,15 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                 }
 
                 var splitHostName = Url.Host.Split('.');
+
+                // if subdomains are available
+                if (splitHostName.Length > 2)
+                {
+                    return ExludeSubDomains.Contains(splitHostName[^3])
+                        ? splitHostName[^2]
+                        : string.Join(" ", splitHostName.Take(splitHostName.Length - 1));
+                }
+
                 return splitHostName[^2];
             }
         }
