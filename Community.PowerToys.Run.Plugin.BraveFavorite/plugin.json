@@ -9,6 +9,6 @@
   "Language": "csharp",
   "Website": "https://aka.ms/powertoys",
   "ExecuteFileName": "Community.PowerToys.Run.Plugin.BraveFavorite.dll",
-  "IcoPathDark": "Images\\BraveFavorite.dark.png",
-  "IcoPathLight": "Images\\BraveFavorite.light.png"
+  "IcoPathDark": "Images\\Url.dark.png",
+  "IcoPathLight": "Images\\Url.light.png"
 }
