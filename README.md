@@ -31,7 +31,7 @@ There is no localization right now, but the plugin has relatively limited user-f
 ## Build
 
 ```shell
-powershell -ExecutionPolicy Bypass .\Build.ps1
+    powershell -ExecutionPolicy Bypass .\Build.ps1
 ```
 
 For developing you can run the underlying powershell script to build the project and automatically copy the project to
@@ -41,9 +41,15 @@ your power toys run plugins
     powershell -ExecutionPolicy Bypass  .\Dev-Build.ps1
 ```
 
+> [!NOTE]  
 > Script has to run with admin privileges 
 
+> [!TIP]  
 > If you haven't installed powershell system-wide you might need to tweak some paths in `Dev-Build.ps1` to fit your environment
+
+Logs are saved in `C:\Users\<UserName>\AppData\Local\Microsoft\PowerToys\PowerToys Run\Logs\<PowerToys Version>\<CurrentDate>.txt`  
+If you build multiple versions and update the extension with the `Dev-Build.ps1` script it sometimes happens that settings are mixed up and the 
+extension won't work properly anymore. To fix this, remove the plugin entry in the `settings.json` located at `C:\Users\<UserName>\AppData\Local\Microsoft\PowerToys\PowerToys Run` and restart PowerToys. 
 
 ## Contribution
 
