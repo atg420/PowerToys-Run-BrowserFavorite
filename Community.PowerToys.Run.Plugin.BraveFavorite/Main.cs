@@ -73,7 +73,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
                     .Search(_favoriteProvider.Root, search, 0)
                     .OrderBy(f => f.Type)
                     .ThenBy(f => f.Name)
-                    .Select(f => f.CreateResult())
+                    .Select(f => f.CreateResult(_context?.API, query.ActionKeyword))
                     .ToList();
             }
             else
@@ -92,7 +92,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
                     var score = StringMatcher.FuzzySearch(query.Search, name);
                     if (string.IsNullOrWhiteSpace(query.Search) || score.Score > 0)
                     {
-                        var result = favorite.CreateResult();
+                        var result = favorite.CreateResult(_context?.API, query.ActionKeyword);
                         result.Score = score.Score;
                         result.TitleHighlightData = score.MatchData;
                         results.Add(result);

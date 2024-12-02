@@ -74,7 +74,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
             _childrens.Add(item);
         }
 
-        public Result CreateResult()
+        public Result CreateResult(IPublicAPI? api, string actionKeyword)
         {
             return Type switch
             {
@@ -85,6 +85,14 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
                     IcoPath = _folderIcoPath,
                     QueryTextDisplay = Path,
                     ContextData = this,
+                    Action = _ =>
+                    {
+                        var newQuery = string.IsNullOrWhiteSpace(actionKeyword)
+                            ? $"{Path}/"
+                            : $"{actionKeyword} {Path}/";
+                        api?.ChangeQuery(newQuery, true);
+                        return false;
+                    },
                 },
                 FavoriteType.Url => new Result
                 {
