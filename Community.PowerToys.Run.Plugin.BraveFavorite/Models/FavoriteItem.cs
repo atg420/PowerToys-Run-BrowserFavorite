@@ -114,6 +114,40 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
 
         public List<ContextMenuResult> CreateContextMenuResult()
         {
+            if (Type == FavoriteType.Folder)
+            {
+                return new List<ContextMenuResult>
+                {
+                    new()
+                    {
+                        Title = "Open Whole Folder (Ctrl+A)",
+                        Glyph = "\xe728",
+                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        AcceleratorKey = Key.A,
+                        AcceleratorModifiers = ModifierKeys.Control,
+                        Action = _ =>
+                        {
+                            try
+                            {
+                                foreach (var favoriteItem in Childrens)
+                                {
+                                    if (favoriteItem.Type != FavoriteType.Folder)
+                                    {
+                                        Helper.OpenInShell($"{favoriteItem.Url}");
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Exception("Failed to open folder group", ex, typeof(FavoriteItem));
+                            }
+
+                            return true;
+                        },
+                    },
+                };
+            }
+
             if (Type == FavoriteType.Url)
             {
                 return new List<ContextMenuResult>
