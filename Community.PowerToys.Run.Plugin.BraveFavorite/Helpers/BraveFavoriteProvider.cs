@@ -9,7 +9,7 @@ using Wox.Plugin.Logger;
 
 namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
 {
-    public class FavoriteProvider : IFavoriteProvider
+    public class BraveFavoriteProvider : IFavoriteProvider
     {
         private readonly string _path = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\BraveSoftware\Brave-Browser\User Data\Default\Bookmarks");
         private readonly FileSystemWatcher _watcher;
@@ -17,7 +17,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
 
         public FavoriteItem Root => _root;
 
-        public FavoriteProvider()
+        public BraveFavoriteProvider()
         {
             _root = new FavoriteItem();
             InitFavorites();
@@ -33,11 +33,16 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
             _watcher.EnableRaisingEvents = true;
         }
 
+        public void Dispose()
+        {
+            _watcher.Dispose();
+        }
+
         private void InitFavorites()
         {
             if (!Path.Exists(_path))
             {
-                Log.Warn($"Failed to find bookmarks file {_path}", typeof(FavoriteProvider));
+                Log.Warn($"Failed to find bookmarks file {_path}", typeof(BraveFavoriteProvider));
                 return;
             }
 

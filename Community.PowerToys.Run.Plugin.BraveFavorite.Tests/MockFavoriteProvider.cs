@@ -36,5 +36,9 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Tests
             _root.AddChildren(coding);
             _root.AddChildren(shopping);
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
