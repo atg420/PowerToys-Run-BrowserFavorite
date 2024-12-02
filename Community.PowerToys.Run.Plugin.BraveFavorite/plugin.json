@@ -5,9 +5,9 @@
   "IsGlobal": false,
   "Name": "Brave Favorite",
   "Author": "derPenz",
-  "Version": "1.0.0",
+  "Version": "0.1.0",
   "Language": "csharp",
-  "Website": "https://aka.ms/powertoys",
+  "Website": "https://github.com/Der-Penz/PowerToys-Run-BraveFavorite",
   "ExecuteFileName": "Community.PowerToys.Run.Plugin.BraveFavorite.dll",
   "IcoPathDark": "Images\\Url.dark.png",
   "IcoPathLight": "Images\\Url.light.png"
