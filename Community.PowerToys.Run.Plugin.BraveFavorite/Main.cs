@@ -184,6 +184,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
                     _favoriteProvider = new ChromeFavoriteProvider();
                     break;
                 case BraveFavorite.BrowserSource.Edge:
+                    _favoriteProvider = new EdgeFavoriteProvider();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(browserSource), browserSource, null);

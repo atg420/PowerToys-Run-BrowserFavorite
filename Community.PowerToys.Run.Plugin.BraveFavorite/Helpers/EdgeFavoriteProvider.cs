@@ -5,13 +5,13 @@ using System;
 
 namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
 
-public class BraveFavoriteProvider : ChromiumFavoriteProvider
+public class EdgeFavoriteProvider : ChromiumFavoriteProvider
 {
     private static readonly string Path =
         Environment.ExpandEnvironmentVariables(
-            @"%LOCALAPPDATA%\BraveSoftware\Brave-Browser\User Data\Default\Bookmarks");
+            @"%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Bookmarks");
 
-    public BraveFavoriteProvider()
+    public EdgeFavoriteProvider()
         : base(Path)
     {
     }
