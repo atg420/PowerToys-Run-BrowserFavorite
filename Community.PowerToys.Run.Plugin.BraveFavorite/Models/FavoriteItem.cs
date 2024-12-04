@@ -7,203 +7,215 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
 using ManagedCommon;
-using Wox.Infrastructure;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models
+namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+
+public class FavoriteItem
 {
-    public class FavoriteItem
+    private static string? _folderIcoPath;
+    private static string? _urlIcoPath;
+    private readonly List<FavoriteItem> _childrens = new();
+    private static readonly string[] ExludeSubDomains = { "www" };
+
+    public string Name { get; }
+
+    public Uri? Url { get; }
+
+    public string BaseUrl
     {
-        private static string? _folderIcoPath;
-        private static string? _urlIcoPath;
-        private readonly List<FavoriteItem> _childrens = new();
-        private static readonly string[] ExludeSubDomains = { "www" };
-
-        public string Name { get; }
-
-        public Uri? Url { get; }
-
-        public string BaseUrl
+        get
         {
-            get
+            if (Url is null)
             {
-                if (Url is null)
-                {
-                    return string.Empty;
-                }
-
-                var splitHostName = Url.Host.Split('.');
-
-                // if subdomains are available
-                if (splitHostName.Length > 2)
-                {
-                    return ExludeSubDomains.Contains(splitHostName[^3])
-                        ? splitHostName[^2]
-                        : string.Join(" ", splitHostName.Take(splitHostName.Length - 1));
-                }
-
-                return splitHostName[^2];
+                return string.Empty;
             }
-        }
 
-        public string Path { get; }
+            var splitHostName = Url.Host.Split('.');
 
-        public FavoriteType Type { get; }
-
-        public ReadOnlyCollection<FavoriteItem> Childrens => _childrens.AsReadOnly();
-
-        public FavoriteItem()
-        {
-            Name = string.Empty;
-            Path = string.Empty;
-            Type = FavoriteType.Folder;
-        }
-
-        public FavoriteItem(string name, Uri? url, string path, FavoriteType type)
-        {
-            Name = name;
-            Url = url;
-            Path = string.IsNullOrEmpty(path) ? $"/{(string.IsNullOrEmpty(name) ? BaseUrl : name)}" : path;
-            Type = type;
-        }
-
-        public void AddChildren(FavoriteItem item)
-        {
-            _childrens.Add(item);
-        }
-
-        public Result CreateResult(IPublicAPI? api, string actionKeyword)
-        {
-            return Type switch
+            // if subdomains are available
+            if (splitHostName.Length > 2)
             {
-                FavoriteType.Folder => new Result
+                return ExludeSubDomains.Contains(splitHostName[^3])
+                    ? splitHostName[^2]
+                    : string.Join(" ", splitHostName.Take(splitHostName.Length - 1));
+            }
+
+            return splitHostName[^2];
+        }
+    }
+
+    public string Path { get; }
+
+    public FavoriteType Type { get; }
+
+    public ReadOnlyCollection<FavoriteItem> Childrens => _childrens.AsReadOnly();
+
+    public FavoriteItem()
+    {
+        Name = string.Empty;
+        Path = string.Empty;
+        Type = FavoriteType.Folder;
+    }
+
+    public FavoriteItem(string name, Uri? url, string path, FavoriteType type)
+    {
+        Name = name;
+        Url = url;
+        Path = string.IsNullOrEmpty(path) ? $"/{(string.IsNullOrEmpty(name) ? BaseUrl : name)}" : path;
+        Type = type;
+    }
+
+    public void AddChildren(FavoriteItem item)
+    {
+        _childrens.Add(item);
+    }
+
+    public Result CreateResult(IPublicAPI? api, IBrowserSource browserSource, string actionKeyword)
+    {
+        return Type switch
+        {
+            FavoriteType.Folder => new Result
+            {
+                Title = Name,
+                SubTitle = $"Folder: {Path}",
+                IcoPath = _folderIcoPath,
+                QueryTextDisplay = Path,
+                ContextData = this,
+                Action = _ =>
                 {
-                    Title = Name,
-                    SubTitle = $"Folder: {Path}",
-                    IcoPath = _folderIcoPath,
-                    QueryTextDisplay = Path,
-                    ContextData = this,
-                    Action = _ =>
-                    {
-                        var newQuery = string.IsNullOrWhiteSpace(actionKeyword)
-                            ? $"{Path}/"
-                            : $"{actionKeyword} {Path}/";
-                        api?.ChangeQuery(newQuery, true);
-                        return false;
-                    },
+                    var newQuery = string.IsNullOrWhiteSpace(actionKeyword)
+                        ? $"{Path}/"
+                        : $"{actionKeyword} {Path}/";
+                    api?.ChangeQuery(newQuery, true);
+                    return false;
                 },
-                FavoriteType.Url => new Result
+            },
+            FavoriteType.Url => new Result
+            {
+                Title = string.IsNullOrEmpty(Name) ? BaseUrl : Name,
+                SubTitle = $"Favorite: {Path}",
+                IcoPath = _urlIcoPath,
+                QueryTextDisplay = Path,
+                Action = _ =>
                 {
-                    Title = string.IsNullOrEmpty(Name) ? BaseUrl : Name,
-                    SubTitle = $"Favorite: {Path}",
-                    IcoPath = _urlIcoPath,
-                    QueryTextDisplay = Path,
+                    if (Url != null)
+                    {
+                        browserSource.Open(Url);
+                    }
+
+                    return true;
+                },
+                ToolTipData = new ToolTipData(string.IsNullOrEmpty(Name) ? BaseUrl : Name, Url?.ToString()),
+                ContextData = this,
+            },
+            _ => throw new ArgumentException(),
+        };
+    }
+
+    public List<ContextMenuResult> CreateContextMenuResult(IPublicAPI? api, IBrowserSource browserSource)
+    {
+        if (Type == FavoriteType.Folder)
+        {
+            return new List<ContextMenuResult>
+            {
+                new()
+                {
+                    Title = "Open Whole Folder (Ctrl+A)",
+                    Glyph = "\xe728",
+                    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    AcceleratorKey = Key.A,
+                    AcceleratorModifiers = ModifierKeys.Control,
                     Action = _ =>
                     {
-                        Helper.OpenInShell($"{Url}");
+                        try
+                        {
+                            foreach (var favoriteItem in Childrens)
+                            {
+                                if (favoriteItem.Type == FavoriteType.Folder)
+                                {
+                                    continue;
+                                }
+
+                                if (favoriteItem.Url != null)
+                                {
+                                    browserSource.Open(favoriteItem.Url);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Exception("Failed to open folder group", ex, typeof(FavoriteItem));
+                        }
+
                         return true;
                     },
-                    ToolTipData = new ToolTipData(string.IsNullOrEmpty(Name) ? BaseUrl : Name, Url?.ToString()),
-                    ContextData = this,
                 },
-                _ => throw new ArgumentException(),
             };
         }
 
-        public List<ContextMenuResult> CreateContextMenuResult()
+        if (Type == FavoriteType.Url)
         {
-            if (Type == FavoriteType.Folder)
+            return new List<ContextMenuResult>
             {
-                return new List<ContextMenuResult>
+                new()
                 {
-                    new()
+                    Title = "Copy URL (Ctrl+C)",
+                    Glyph = "\xE8C8",
+                    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    AcceleratorKey = Key.C,
+                    AcceleratorModifiers = ModifierKeys.Control,
+                    Action = _ =>
                     {
-                        Title = "Open Whole Folder (Ctrl+A)",
-                        Glyph = "\xe728",
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        AcceleratorKey = Key.A,
-                        AcceleratorModifiers = ModifierKeys.Control,
-                        Action = _ =>
+                        try
                         {
-                            try
-                            {
-                                foreach (var favoriteItem in Childrens)
-                                {
-                                    if (favoriteItem.Type != FavoriteType.Folder)
-                                    {
-                                        Helper.OpenInShell($"{favoriteItem.Url}");
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Exception("Failed to open folder group", ex, typeof(FavoriteItem));
-                            }
+                            Clipboard.SetText(Url?.ToString() ?? string.Empty);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Exception("Failed to copy URL to clipboard", ex, typeof(FavoriteItem));
+                        }
 
-                            return true;
-                        },
+                        return true;
                     },
-                };
-            }
-
-            if (Type == FavoriteType.Url)
-            {
-                return new List<ContextMenuResult>
+                },
+                new()
                 {
-                    new()
+                    Title = "Open InPrivate (Ctrl+P)",
+                    Glyph = "\xE727",
+                    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    AcceleratorKey = Key.P,
+                    AcceleratorModifiers = ModifierKeys.Control,
+                    Action = _ =>
                     {
-                        Title = "Copy URL (Ctrl+C)",
-                        Glyph = "\xE8C8",
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        AcceleratorKey = Key.C,
-                        AcceleratorModifiers = ModifierKeys.Control,
-                        Action = _ =>
+                        if (Url != null)
                         {
-                            try
-                            {
-                                Clipboard.SetText(Url?.ToString() ?? string.Empty);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Exception("Failed to copy URL to clipboard", ex, typeof(FavoriteItem));
-                            }
+                            browserSource.Open(Url, true);
+                        }
 
-                            return true;
-                        },
+                        return true;
                     },
-                    new()
-                    {
-                        Title = "Open InPrivate (Ctrl+P)",
-                        Glyph = "\xE727",
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        AcceleratorKey = Key.P,
-                        AcceleratorModifiers = ModifierKeys.Control,
-                        Action = _ =>
-                        {
-                            Helper.OpenInShell(@"shell:AppsFolder\Brave", $"-incognito  {Url}");
-                            return true;
-                        },
-                    },
-                };
-            }
-
-            return new List<ContextMenuResult>();
+                },
+            };
         }
 
-        public static void SetIcons(Theme theme)
+        return new List<ContextMenuResult>();
+    }
+
+    public static void SetIcons(Theme theme)
+    {
+        if (theme == Theme.Light || theme == Theme.HighContrastWhite)
         {
-            if (theme == Theme.Light || theme == Theme.HighContrastWhite)
-            {
-                _folderIcoPath = "Images/Folder.light.png";
-                _urlIcoPath = "Images/Url.light.png";
-            }
-            else
-            {
-                _folderIcoPath = "Images/Folder.dark.png";
-                _urlIcoPath = "Images/Url.dark.png";
-            }
+            _folderIcoPath = "Images/Folder.light.png";
+            _urlIcoPath = "Images/Url.light.png";
+        }
+        else
+        {
+            _folderIcoPath = "Images/Folder.dark.png";
+            _urlIcoPath = "Images/Url.dark.png";
         }
     }
 }
