@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
 
 public class ChromeFavoriteProvider : ChromiumFavoriteProvider
 {

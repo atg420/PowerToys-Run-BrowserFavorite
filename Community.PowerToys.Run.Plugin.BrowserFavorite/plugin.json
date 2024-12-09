@@ -3,12 +3,12 @@
   "Disabled": false,
   "ActionKeyword": "@",
   "IsGlobal": false,
-  "Name": "Brave Favorite",
+  "Name": "Browser Favorite",
   "Author": "derPenz",
-  "Version": "0.1.0",
+  "Version": "0.2.0",
   "Language": "csharp",
-  "Website": "https://github.com/Der-Penz/PowerToys-Run-BraveFavorite",
-  "ExecuteFileName": "Community.PowerToys.Run.Plugin.BraveFavorite.dll",
+  "Website": "https://github.com/Der-Penz/PowerToys-Run-BrowserFavorite",
+  "ExecuteFileName": "Community.PowerToys.Run.Plugin.BrowserFavorite.dll",
   "IcoPathDark": "Images\\Url.dark.png",
   "IcoPathLight": "Images\\Url.light.png"
 }

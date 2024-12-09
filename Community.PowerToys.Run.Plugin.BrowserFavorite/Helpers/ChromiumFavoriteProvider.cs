@@ -4,10 +4,10 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 using Wox.Plugin.Logger;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
 
 public abstract class ChromiumFavoriteProvider : IFavoriteProvider
 {
@@ -43,7 +43,7 @@ public abstract class ChromiumFavoriteProvider : IFavoriteProvider
     {
         if (!Path.Exists(_bookmarkPath))
         {
-            Log.Warn($"Failed to find bookmarks file {_bookmarkPath}", typeof(BraveFavoriteProvider));
+            Log.Warn($"Failed to find bookmarks file {_bookmarkPath}", typeof(ChromiumFavoriteProvider));
             return;
         }
 

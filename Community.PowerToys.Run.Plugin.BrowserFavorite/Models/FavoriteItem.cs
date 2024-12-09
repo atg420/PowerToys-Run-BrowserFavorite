@@ -7,12 +7,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
 using ManagedCommon;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 
 public class FavoriteItem
 {

@@ -5,7 +5,7 @@ using Wox.Infrastructure;
 using Wox.Plugin.Logger;
 using Path = System.IO.Path;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
 
 public class EdgeBrowserSource : IBrowserSource
 {

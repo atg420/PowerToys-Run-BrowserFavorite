@@ -5,15 +5,15 @@ using Wox.Infrastructure;
 using Wox.Plugin.Logger;
 using Path = System.IO.Path;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
 
-public class ChromeBrowserSource : IBrowserSource
+public class BraveBrowserSource : IBrowserSource
 {
-    public ChromeBrowserSource()
+    public BraveBrowserSource()
     {
-        DefaultExecutablePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+        DefaultExecutablePath = @"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe";
         BrowserExecutable = DefaultExecutablePath;
-        FavoriteProvider = new ChromeFavoriteProvider();
+        FavoriteProvider = new BraveFavoriteProvider();
     }
 
     public string DefaultExecutablePath { get; }

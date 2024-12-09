@@ -1,12 +1,15 @@
-# PowerToys Run: Brave Favorite plugin
+# PowerToys Run: Browser Favorite plugin
 
 This Repository is Forked from davidegiacometti/PowerToys-Run-EdgeFavorite for Brave.
 
-It extends the functionality to allow for searching empty bookmark names
+It extends the functionality to allow for searching empty bookmark names and supports a list of browsers:
+- Brave
+- Edge
+- Chrome
 
 ## Installation
 
-- Download the [latest release](https://github.com/Der-Penz/PowerToys-Run-BraveFavorite/releases/) by selecting the
+- Download the [latest release](https://github.com/Der-Penz/PowerToys-Run-BrowserFavorite/releases/) by selecting the
   architecture that matches your machine: `x64` (more common) or `ARM64`
 - Close PowerToys
 - Extract the archive to `%LOCALAPPDATA%\Microsoft\PowerToys\PowerToys Run\Plugins` or system-wide
@@ -25,7 +28,7 @@ There is no localization right now, but the plugin has relatively limited user-f
 
 ## Future Plans
 
-- support other browsers
+- support for more browser
 - localization
 
 ## Build

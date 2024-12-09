@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite
 {
     public class Main : IPlugin, ISettingProvider, IContextMenu
     {
@@ -33,7 +33,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
 
         private IBrowserSource _browserSource;
 
-        public string Name => "Brave Favorite";
+        public string Name => "Browser Favorite";
 
         public string Description => "Open Browser favorites.";
 
@@ -174,9 +174,9 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
             var oldType = _browserSource.GetType();
             _browserSource = browserSource switch
             {
-                BraveFavorite.BrowserSource.Brave => new BraveBrowserSource(),
-                BraveFavorite.BrowserSource.Chrome => new ChromeBrowserSource(),
-                BraveFavorite.BrowserSource.Edge => new EdgeBrowserSource(),
+                BrowserFavorite.BrowserSource.Brave => new BraveBrowserSource(),
+                BrowserFavorite.BrowserSource.Chrome => new ChromeBrowserSource(),
+                BrowserFavorite.BrowserSource.Edge => new EdgeBrowserSource(),
                 _ => throw new ArgumentOutOfRangeException(nameof(browserSource), browserSource, null),
             };
         }
