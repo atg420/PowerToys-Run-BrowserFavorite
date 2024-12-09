@@ -2,10 +2,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Linq;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Tests
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Tests
 {
     [TestClass]
     public class FavoriteQueryTest

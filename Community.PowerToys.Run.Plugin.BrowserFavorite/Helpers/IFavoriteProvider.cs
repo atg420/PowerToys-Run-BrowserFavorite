@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Davide Giacometti. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+using System;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers
 {
-    public interface IFavoriteProvider
+    public interface IFavoriteProvider : IDisposable
     {
         FavoriteItem Root { get; }
     }

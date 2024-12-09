@@ -5,10 +5,10 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     exit
 }
 
-$zip1 = "BraveFavorite-0.1.0-x64.zip"
+$zip1 = "BrowserFavorite-0.1.0-x64.zip"
 $buildScript = ".\Build.ps1"
 $destinationPath = "$env:ProgramFiles\PowerToys\RunPlugins"  # Destination for the extracted files
-$extractedFolderName = "BraveFavorite"  # Name of the folder inside the ZIP file
+$extractedFolderName = "BrowserFavorite"  # Name of the folder inside the ZIP file
 $powerToysExecutable = "$env:ProgramFiles\PowerToys\PowerToys.exe"  # Path to PowerToys executable
 
 # 1. Close the PowerToys program
@@ -42,7 +42,7 @@ if (Test-Path $zip1) {
         exit
     }
 
-    # 5. Check if the BraveFavorite folder exists and delete it
+    # 5. Check if the BrowserFavorite folder exists and delete it
     $folderPath = Join-Path -Path $destinationPath -ChildPath $extractedFolderName
     if (Test-Path $folderPath) {
         Write-Output "Deleting existing folder $extractedFolderName..."

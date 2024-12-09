@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Helpers
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers
 {
     public interface IFavoriteQuery
     {

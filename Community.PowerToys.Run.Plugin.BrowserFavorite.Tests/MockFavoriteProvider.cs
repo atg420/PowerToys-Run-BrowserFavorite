@@ -2,10 +2,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite.Tests
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite.Tests
 {
     public class MockFavoriteProvider : IFavoriteProvider
     {
@@ -35,6 +35,10 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite.Tests
             _root.AddChildren(new FavoriteItem("LinkedIn", new Uri("https://www.linkedin.com/"), "LinkedIn", FavoriteType.Url));
             _root.AddChildren(coding);
             _root.AddChildren(shopping);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

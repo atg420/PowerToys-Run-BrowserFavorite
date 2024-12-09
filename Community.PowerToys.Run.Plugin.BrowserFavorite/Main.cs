@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Helpers;
-using Community.PowerToys.Run.Plugin.BraveFavorite.Models;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Helpers;
+using Community.PowerToys.Run.Plugin.BrowserFavorite.Models;
 using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
 
-namespace Community.PowerToys.Run.Plugin.BraveFavorite
+namespace Community.PowerToys.Run.Plugin.BrowserFavorite
 {
     public class Main : IPlugin, ISettingProvider, IContextMenu
     {
@@ -20,15 +20,20 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
 
         private const string SearchTree = nameof(SearchTree);
         private const string SearchBaseUrl = nameof(SearchBaseUrl);
+        private const string BrowserSource = nameof(BrowserSource);
+        private const string BrowserExePath = nameof(BrowserExePath);
         private const bool SearchTreeDefault = false;
         private const bool SearchBaseUrlDefault = false;
-        private readonly IFavoriteProvider _favoriteProvider;
+        private const int BrowserSourceTypeDefault = 0;
         private readonly IFavoriteQuery _favoriteQuery;
         private PluginInitContext? _context;
         private bool _searchTree;
         private bool _searchBaseUrl;
+        private BrowserSource _browserSourceType;
 
-        public string Name => "Brave Favorite";
+        private IBrowserSource _browserSource;
+
+        public string Name => "Browser Favorite";
 
         public string Description => "Open Browser favorites.";
 
@@ -46,13 +51,26 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
                 Key = SearchBaseUrl,
                 Value = SearchBaseUrlDefault,
                 DisplayLabel = "Base URL Search",
-                DisplayDescription = "If enabled, bookmarks without titles can be found by searching their base URL. For example, 'https://www.google.com/' can be found by searching 'google'. If disabled, bookmarks without titles cannot be searched.",
+                DisplayDescription =
+                    "If enabled, bookmarks without titles can be found by searching their base URL. For example, 'https://www.google.com/' can be found by searching 'google'. If disabled, bookmarks without titles cannot be searched.",
+            },
+            new()
+            {
+                Key = BrowserSource,
+                PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Combobox,
+                DisplayLabel = "Browser Source",
+                DisplayDescription =
+                    "Select the browser bookmark source",
+                ComboBoxItems = Enum.GetValues(typeof(BrowserSource)).Cast<int>().Select(v =>
+                    new KeyValuePair<string, string>(((BrowserSource)v).ToString(), v + string.Empty)).ToList(),
+                ComboBoxValue = BrowserSourceTypeDefault,
             },
         };
 
         public Main()
         {
-            _favoriteProvider = new FavoriteProvider();
+            _browserSource = new ChromeBrowserSource();
+            UpdateBrowserSource(_browserSourceType);
             _favoriteQuery = new FavoriteQuery();
         }
 
@@ -70,17 +88,16 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
             if (_searchTree)
             {
                 return _favoriteQuery
-                    .Search(_favoriteProvider.Root, search, 0)
+                    .Search(_browserSource.FavoriteProvider.Root, search, 0)
                     .OrderBy(f => f.Type)
                     .ThenBy(f => f.Name)
-                    .Select(f => f.CreateResult(_context?.API, query.ActionKeyword))
+                    .Select(f => f.CreateResult(_context?.API, _browserSource, query.ActionKeyword))
                     .ToList();
             }
             else
             {
                 var results = new List<Result>();
-
-                foreach (var favorite in _favoriteQuery.GetAll(_favoriteProvider.Root))
+                foreach (var favorite in _favoriteQuery.GetAll(_browserSource.FavoriteProvider.Root))
                 {
                     var name = favorite.Name;
 
@@ -92,7 +109,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
                     var score = StringMatcher.FuzzySearch(query.Search, name);
                     if (string.IsNullOrWhiteSpace(query.Search) || score.Score > 0)
                     {
-                        var result = favorite.CreateResult(_context?.API, query.ActionKeyword);
+                        var result = favorite.CreateResult(_context?.API, _browserSource, query.ActionKeyword);
                         result.Score = score.Score;
                         result.TitleHighlightData = score.MatchData;
                         results.Add(result);
@@ -112,14 +129,23 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
         {
             if (settings != null && settings.AdditionalOptions != null)
             {
-                _searchTree = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchTree)?.Value ?? SearchTreeDefault;
-                _searchBaseUrl = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchBaseUrl)?.Value ?? SearchBaseUrlDefault;
+                _searchTree = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchTree)?.Value ??
+                              SearchTreeDefault;
+                _searchBaseUrl = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchBaseUrl)?.Value ??
+                                 SearchBaseUrlDefault;
+                _browserSourceType =
+                    (BrowserSource)(settings.AdditionalOptions.FirstOrDefault(x => x.Key == BrowserSource)
+                                        ?.ComboBoxValue ??
+                                    BrowserSourceTypeDefault);
             }
             else
             {
                 _searchTree = SearchTreeDefault;
                 _searchBaseUrl = SearchBaseUrlDefault;
+                _browserSourceType = BrowserSourceTypeDefault;
             }
+
+            UpdateBrowserSource(_browserSourceType);
         }
 
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
@@ -129,7 +155,7 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
                 return new List<ContextMenuResult>();
             }
 
-            return favorite.CreateContextMenuResult();
+            return favorite.CreateContextMenuResult(_context?.API, _browserSource);
         }
 
         private void OnThemeChanged(Theme currentTheme, Theme newTheme)
@@ -140,6 +166,19 @@ namespace Community.PowerToys.Run.Plugin.BraveFavorite
         private static void UpdateIconsPath(Theme theme)
         {
             FavoriteItem.SetIcons(theme);
+        }
+
+        private void UpdateBrowserSource(BrowserSource browserSource)
+        {
+            _browserSource.Dispose();
+            var oldType = _browserSource.GetType();
+            _browserSource = browserSource switch
+            {
+                BrowserFavorite.BrowserSource.Brave => new BraveBrowserSource(),
+                BrowserFavorite.BrowserSource.Chrome => new ChromeBrowserSource(),
+                BrowserFavorite.BrowserSource.Edge => new EdgeBrowserSource(),
+                _ => throw new ArgumentOutOfRangeException(nameof(browserSource), browserSource, null),
+            };
         }
     }
 }

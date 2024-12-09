@@ -5,18 +5,18 @@ $version = $xml.Project.PropertyGroup.Version
 
 foreach ($platform in "ARM64", "x64")
 {
-    if (Test-Path -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin")
+    if (Test-Path -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BrowserFavorite\bin")
     {
-        Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\*" -Recurse
+        Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BrowserFavorite\bin\*" -Recurse
     }
 
-    dotnet build $PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite.sln -c Release /p:Platform=$platform
+    dotnet build $PSScriptRoot\Community.PowerToys.Run.Plugin.BrowserFavorite.sln -c Release /p:Platform=$platform
 
-    Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\*" -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
-    Rename-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\Release" -NewName "BraveFavorite"
+    Remove-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BrowserFavorite\bin\*" -Recurse -Include *.xml, *.pdb, PowerToys.*, Wox.*
+    Rename-Item -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BrowserFavorite\bin\$platform\Release" -NewName "BrowserFavorite"
 
     # Define the destination zip file path
-    $zipPath = "$PSScriptRoot\BraveFavorite-$version-$platform.zip"
+    $zipPath = "$PSScriptRoot\BrowserFavorite-$version-$platform.zip"
     
     # Check if the zip file already exists, and remove it if it does
     if (Test-Path -Path $zipPath)
@@ -25,5 +25,5 @@ foreach ($platform in "ARM64", "x64")
     }
     
     # Create the ZIP file
-    Compress-Archive -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BraveFavorite\bin\$platform\BraveFavorite" -DestinationPath $zipPath
+    Compress-Archive -Path "$PSScriptRoot\Community.PowerToys.Run.Plugin.BrowserFavorite\bin\$platform\BrowserFavorite" -DestinationPath $zipPath
 }

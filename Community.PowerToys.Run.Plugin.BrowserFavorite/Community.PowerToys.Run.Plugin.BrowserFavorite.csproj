@@ -8,6 +8,7 @@
     <Platforms>x64;ARM64</Platforms>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <RootNamespace>Community.PowerToys.Run.Plugin.BrowserFavorite</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>

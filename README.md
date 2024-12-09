@@ -1,12 +1,15 @@
-# PowerToys Run: Brave Favorite plugin
+# PowerToys Run: Browser Favorite plugin
 
 This Repository is Forked from davidegiacometti/PowerToys-Run-EdgeFavorite for Brave.
 
-It extends the functionality to allow for searching empty bookmark names
+It extends the functionality to allow for searching empty bookmark names and supports a list of browsers:
+- Brave
+- Edge
+- Chrome
 
 ## Installation
 
-- Download the [latest release](https://github.com/Der-Penz/PowerToys-Run-BraveFavorite/releases/) by selecting the
+- Download the [latest release](https://github.com/Der-Penz/PowerToys-Run-BrowserFavorite/releases/) by selecting the
   architecture that matches your machine: `x64` (more common) or `ARM64`
 - Close PowerToys
 - Extract the archive to `%LOCALAPPDATA%\Microsoft\PowerToys\PowerToys Run\Plugins` or system-wide
@@ -25,13 +28,13 @@ There is no localization right now, but the plugin has relatively limited user-f
 
 ## Future Plans
 
-- support other browsers
+- support for more browser
 - localization
 
 ## Build
 
 ```shell
-powershell -ExecutionPolicy Bypass .\Build.ps1
+    powershell -ExecutionPolicy Bypass .\Build.ps1
 ```
 
 For developing you can run the underlying powershell script to build the project and automatically copy the project to
@@ -41,9 +44,15 @@ your power toys run plugins
     powershell -ExecutionPolicy Bypass  .\Dev-Build.ps1
 ```
 
+> [!NOTE]  
 > Script has to run with admin privileges 
 
+> [!TIP]  
 > If you haven't installed powershell system-wide you might need to tweak some paths in `Dev-Build.ps1` to fit your environment
+
+Logs are saved in `C:\Users\<UserName>\AppData\Local\Microsoft\PowerToys\PowerToys Run\Logs\<PowerToys Version>\<CurrentDate>.txt`  
+If you build multiple versions and update the extension with the `Dev-Build.ps1` script it sometimes happens that settings are mixed up and the 
+extension won't work properly anymore. To fix this, remove the plugin entry in the `settings.json` located at `C:\Users\<UserName>\AppData\Local\Microsoft\PowerToys\PowerToys Run` and restart PowerToys. 
 
 ## Contribution
 
