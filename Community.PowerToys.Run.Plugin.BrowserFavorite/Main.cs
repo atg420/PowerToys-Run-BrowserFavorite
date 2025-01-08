@@ -11,6 +11,7 @@ using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
+using Wox.Plugin.Logger;
 
 namespace Community.PowerToys.Run.Plugin.BrowserFavorite
 {
@@ -31,7 +32,7 @@ namespace Community.PowerToys.Run.Plugin.BrowserFavorite
         private bool _searchBaseUrl;
         private BrowserSource _browserSourceType;
 
-        private IBrowserSource _browserSource;
+        private IBrowserSource? _browserSource;
 
         public string Name => "Browser Favorite";
 
@@ -69,9 +70,17 @@ namespace Community.PowerToys.Run.Plugin.BrowserFavorite
 
         public Main()
         {
-            _browserSource = new ChromeBrowserSource();
-            UpdateBrowserSource(_browserSourceType);
+            _browserSource = null;
             _favoriteQuery = new FavoriteQuery();
+            try
+            {
+                UpdateBrowserSource(_browserSourceType);
+            }
+            catch (ApplicationException ex)
+            {
+                _browserSource = null;
+                Log.Exception("Browser Source not found", ex, typeof(Main));
+            }
         }
 
         public void Init(PluginInitContext context)
@@ -84,6 +93,11 @@ namespace Community.PowerToys.Run.Plugin.BrowserFavorite
         public List<Result> Query(Query query)
         {
             var search = query.Search.Replace('\\', '/').Split('/');
+
+            if (_browserSource is null)
+            {
+                return new List<Result>();
+            }
 
             if (_searchTree)
             {
@@ -127,6 +141,7 @@ namespace Community.PowerToys.Run.Plugin.BrowserFavorite
 
         public void UpdateSettings(PowerLauncherPluginSettings settings)
         {
+            var prevSourceType = _browserSourceType;
             if (settings != null && settings.AdditionalOptions != null)
             {
                 _searchTree = settings.AdditionalOptions.FirstOrDefault(x => x.Key == SearchTree)?.Value ??
@@ -145,12 +160,28 @@ namespace Community.PowerToys.Run.Plugin.BrowserFavorite
                 _browserSourceType = BrowserSourceTypeDefault;
             }
 
-            UpdateBrowserSource(_browserSourceType);
+            try
+            {
+                UpdateBrowserSource(_browserSourceType);
+            }
+            catch (ApplicationException)
+            {
+                _browserSource = null;
+                _context?.API.ShowMsg(
+                    "Error selecting Browser source",
+                    "The selected browser source might not be installed on your system, try selecting a different one",
+                    string.Empty);
+            }
         }
 
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
             if (selectedResult.ContextData is not FavoriteItem favorite)
+            {
+                return new List<ContextMenuResult>();
+            }
+
+            if (_browserSource is null)
             {
                 return new List<ContextMenuResult>();
             }
@@ -170,15 +201,26 @@ namespace Community.PowerToys.Run.Plugin.BrowserFavorite
 
         private void UpdateBrowserSource(BrowserSource browserSource)
         {
-            _browserSource.Dispose();
-            var oldType = _browserSource.GetType();
-            _browserSource = browserSource switch
+            _browserSource?.Dispose();
+
+            try
             {
-                BrowserFavorite.BrowserSource.Brave => new BraveBrowserSource(),
-                BrowserFavorite.BrowserSource.Chrome => new ChromeBrowserSource(),
-                BrowserFavorite.BrowserSource.Edge => new EdgeBrowserSource(),
-                _ => throw new ArgumentOutOfRangeException(nameof(browserSource), browserSource, null),
-            };
+                _browserSource = browserSource switch
+                {
+                    BrowserFavorite.BrowserSource.Brave => new BraveBrowserSource(),
+                    BrowserFavorite.BrowserSource.Chrome => new ChromeBrowserSource(),
+                    BrowserFavorite.BrowserSource.Edge => new EdgeBrowserSource(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(browserSource), browserSource, null),
+                };
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Selected Browser Source might not be installed", e);
+            }
         }
     }
 }
