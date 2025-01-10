@@ -4,8 +4,9 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Start-Process -FilePath "powershell.exe" -ArgumentList ("-NoProfile", "-ExecutionPolicy Bypass", "-File", "$($MyInvocation.MyCommand.Definition)") -Verb RunAs
     exit
 }
-
-$zip1 = "BrowserFavorite-0.1.0-x64.zip"
+[xml]$xml = Get-Content -Path "$PSScriptRoot\Directory.Build.Props"
+$version = $xml.Project.PropertyGroup.Version
+$zip1 = "BrowserFavorite-$version-x64.zip"
 $buildScript = ".\Build.ps1"
 $destinationPath = "$env:ProgramFiles\PowerToys\RunPlugins"  # Destination for the extracted files
 $extractedFolderName = "BrowserFavorite"  # Name of the folder inside the ZIP file
