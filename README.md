@@ -1,4 +1,4 @@
-# PowerToys Run: Browser Favorite plugin
+721c17d6231b6a31dd34ef36db06463e7f9a13c7# PowerToys Run: Browser Favorite plugin
 
 This Repository is Forked from davidegiacometti/PowerToys-Run-EdgeFavorite for Brave.
 
