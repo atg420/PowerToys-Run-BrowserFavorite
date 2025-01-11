@@ -16,6 +16,11 @@ It extends the functionality to allow for searching empty bookmark names and sup
   `%ProgramFiles%\PowerToys\RunPlugins`
 - Open PowerToys
 
+## Usage
+1. Open PowerToys Run (default shortcut is Alt+Space).
+2. Type @ followed by the bookmark your searching.
+3. Select a bookmark and it will open in your selected browser
+
 ## Screenshots
 
 ![Search](./images/Search.png)

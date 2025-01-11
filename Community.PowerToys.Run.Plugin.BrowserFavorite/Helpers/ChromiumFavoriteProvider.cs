@@ -47,10 +47,21 @@ public abstract class ChromiumFavoriteProvider : IFavoriteProvider
             return;
         }
 
-        using var fs = new FileStream(_bookmarkPath, FileMode.Open, FileAccess.Read);
+        using var fs = new FileStream(_bookmarkPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using var sr = new StreamReader(fs);
         string json = sr.ReadToEnd();
-        var parsed = JsonDocument.Parse(json);
+
+        JsonDocument parsed;
+        try
+        {
+            parsed = JsonDocument.Parse(json);
+        }
+        catch (Exception ex)
+        {
+            Log.Exception("Failed to parse bookmarks file, it might be edited in this moment", ex, typeof(ChromiumFavoriteProvider));
+            return;
+        }
+
         parsed.RootElement.TryGetProperty("roots", out var rootElement);
         if (rootElement.ValueKind != JsonValueKind.Object)
         {
