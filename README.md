@@ -5,7 +5,7 @@ This Repository is Forked from davidegiacometti/PowerToys-Run-EdgeFavorite for B
 It extends the functionality to allow for searching empty bookmark names and supports a list of browsers:
 - Brave
 - Edge
-- Chrome
+- Chromehttps://drive.google.com/file/d/1KUXx98JK5uvyWcIXdeJ9Qp8K-J7YlLFr/view?usp=drivesdk
 
 ## Installation
 
